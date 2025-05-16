@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { axiosInstance } from "../utility/baseUrl";
+import ReportDetails from "./ReportDetails";
 
 const ScanPage: React.FC = () => {
   const [url, setUrl] = useState("");
@@ -14,6 +15,8 @@ const ScanPage: React.FC = () => {
     try {
       const res = await axiosInstance.post("/url/scan", { url });
       setResult(res.data);
+      console.log(res.data);
+      
     } catch (error) {
       setResult({ error: "Scan failed. Please try again." });
     } finally {
@@ -59,13 +62,13 @@ const ScanPage: React.FC = () => {
         )}
 
         {result && (
-          <div className="mt-6 bg-black/30 p-4 rounded-md max-h-72 overflow-auto border border-indigo-400">
-            <h2 className="text-lg font-semibold text-indigo-300">
-              🧾 Scan Results
+          <div className="mt-6 bg-black/30 p-4 rounded-md max-h- custom-scroll averflow-y-auto max-h-[35vh]  overflow-auto border border-indigo-400">
+            <h2 className="text-lg font-semibold text-indigo-300  text-center">
+               Scan Results
             </h2>
-            <pre className="mt-2 text-sm text-gray-100 whitespace-pre-wrap">
-              {JSON.stringify(result, null, 2)}
-            </pre>
+            {/* report of the project  */}
+            <ReportDetails data = {result}/>
+           
           </div>
         )}
 
