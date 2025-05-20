@@ -15,6 +15,7 @@ export const detectCMSVulnerabilities = async (url) => {
 
     let vulnerable = false;
     let reason = '';
+    consolest.log('CMS detected scanning', cms);
 
     if (cms.includes('wordpress')) {
       vulnerable = true;

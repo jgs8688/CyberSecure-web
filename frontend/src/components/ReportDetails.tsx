@@ -6,6 +6,8 @@ interface reportData {
 
 const ReportDetails: React.FC<reportData> = ({ data }) => {
   const { report } = data;
+  console.log("Report Data: ", report);
+  
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-xl mt-8">
@@ -142,7 +144,7 @@ const ReportDetails: React.FC<reportData> = ({ data }) => {
             </td>
             <td className="p-3 text-slate-500 max-w-12">
               {report.hiddenScripts.samples.length > 0
-                ? report.hiddenScripts.samples.join(", ")
+                ? report.hiddenScripts.samples.join(',')
                 : "No hidden scripts"}
             </td>
           </tr>
