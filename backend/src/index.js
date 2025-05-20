@@ -9,6 +9,7 @@ import googleRoute from "./router/route.google.js";
 import mongoose from "mongoose";
 import authorized from "./router/router.authorized.js";
 import scanRouter from "./router/router.scan.js";
+import reportRouter from "./router/router.report.js";
 
 dotenv.config();
 const app = express();
@@ -55,6 +56,13 @@ app.use("/auth", googleRoute);
 app.use("/user", authorized);
 // scan the url
 app.use('/url',scanRouter);
+// report the url
+app.use('/url',reportRouter );
+// 404 error handling
+app.use((req, res, next) => {
+  res.status(404).send("404 Not Found");
+});
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on port: ${PORT}`);

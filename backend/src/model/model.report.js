@@ -11,9 +11,8 @@ const reportSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    status: {
+    domain: {
       type: String,
-      enum: ["safe", "malicious"],
       required: true,
     },
      
@@ -23,5 +22,5 @@ const reportSchema = new mongoose.Schema(
   }
 );
 
-const Report  = new mongoose.model("Report", reportSchema);
-export default Report;
+const ReportData  = new mongoose.model("ReportData", reportSchema);
+export default ReportData;
