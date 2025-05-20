@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { mongo } from "mongoose";
 
 const reportSchema = new mongoose.Schema(
   {
@@ -22,3 +22,6 @@ const reportSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+const Report  = new mongoose.model("Report", reportSchema);
+export default Report;
