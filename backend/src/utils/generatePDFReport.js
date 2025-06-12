@@ -11,7 +11,7 @@ export const generatePDFReport = async (url, scanResults) => {
   const writeStream = fs.createWriteStream(outputPath);
   doc.pipe(writeStream);
 
-  // 🧾 Page Border
+  // Page Border
   doc.save()
     .rect(20, 20, doc.page.width - 40, doc.page.height - 40)
     .strokeColor('#cfd8dc')
@@ -19,7 +19,7 @@ export const generatePDFReport = async (url, scanResults) => {
     .stroke()
     .restore();
 
-  // 🧾 Header
+  //  Header
   doc
     .fillColor('#003366')
     .fontSize(22)
@@ -33,7 +33,7 @@ export const generatePDFReport = async (url, scanResults) => {
     .text(`Scan Timestamp: ${new Date().toLocaleString()}`, { align: 'center' })
     .moveDown(1);
 
-  // 📋 Table Title
+  // Table Title
   doc
     .fontSize(16)
     .fillColor('#1a237e')
@@ -169,6 +169,9 @@ export const generatePDFReport = async (url, scanResults) => {
     });
 
   doc.end();
+  
+
+  
 
   return new Promise((resolve, reject) => {
     writeStream.on('finish', () => resolve(outputPath));

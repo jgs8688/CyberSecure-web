@@ -1,5 +1,5 @@
 import express from "express";
-import ReportData from "../model/model.report";
+import ReportData from "../model/model.report.js";
 
 const reportRouter = express.Router();
 // to report a url
@@ -41,13 +41,11 @@ reportRouter.get("/report/:userId", async (req, res) => {
     if (!userReports || userReports.length === 0) {
       return res.status(404).json({ message: "No report found" });
     }
-    console.log("User report fetched successfully:", userReport);
-    return res
-      .status(200)
-      .json({
-        message: "User report fetched successfully",
-        userReports: userReports,
-      });
+    console.log("User report fetched successfully:", userReports);
+    return res.status(200).json({
+      message: "User report fetched successfully",
+      userReports: userReports,
+    });
   } catch (error) {
     console.error("Error fetching report:", error);
     res.status(500).json({ message: "Internal Server Error" });

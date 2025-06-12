@@ -7,6 +7,7 @@ import { checkDNSRebinding } from "../utility/scanner/dnsRebindingChecker.js";
 import { generatePDFReport } from "../utils/generatePDFReport.js";
 import { detectCMSVulnerabilities } from "../utility/scanner/cmsDetector.js";
 import { detectMalwareLinks } from "../utility/scanner/malwareLinks.js";
+import cloudinaryData from "../router/router.cloudinary.js";
 
 export const scanWebsite = async (req, res) => {
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -45,10 +46,21 @@ export const scanWebsite = async (req, res) => {
 
     const pdfPath = await generatePDFReport(url, reportData);
 
+    console.log("PDF generated at:", pdfPath);
+    // todo
+    if (!pdfPath) {
+      return res.status(500).json({ error: "Failed to generate PDF report" });
+    }
+    // Upload PDF to cloud storage
+    const cloudFilePath = await cloudinaryData(pdfPath);
+    if (!cloudFilePath) {
+      return res.status(500).json({ error: "Failed to upload PDF to cloud" });
+    }
+
     return res.status(200).json({
       message: "Scan complete",
       report: reportData,
-      pdf: pdfPath,
+      pdf: cloudFilePath, 
     });
   } catch (err) {
     console.error("Scan error:", err);

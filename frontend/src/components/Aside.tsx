@@ -1,7 +1,32 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import "../index.css";
-
+import { axiosInstance } from "../utility/baseUrl";
+import { useAuth } from "../context/Authcontext";
+interface Item {
+  name: string;
+  url: string;
+  domail: string;
+}
 export default function Aside() {
+  const { user:userId, setUser } = useAuth();
+
+  const [items, setItems] = useState<Array<Item>>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await axiosInstance.get(`/url/report/${userId}`, {
+        withCredentials: true,
+      });
+      if (res.status === 200) {
+        setItems(res.data.data);
+        console.log("Fetched data:", res.data.data);
+      } else {
+        console.error("Error fetching data:", res.statusText);
+      }
+    };
+
+    fetchData();
+  }, []);
   const data = [
     {
       id: "1",
@@ -74,7 +99,7 @@ export default function Aside() {
           knowledge.
         </p>
       </div>
-      <div >
+      <div>
         <div className="overflow-y-auto max-h-[70vh] mt-4  custom-scroll h-screen">
           {data.map((item) => (
             <div
