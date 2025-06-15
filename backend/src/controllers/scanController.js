@@ -46,7 +46,6 @@ export const scanWebsite = async (req, res) => {
 
     const pdfPath = await generatePDFReport(url, reportData);
 
-    console.log("PDF generated at:", pdfPath);
     // todo
     if (!pdfPath) {
       return res.status(500).json({ error: "Failed to generate PDF report" });
@@ -60,7 +59,9 @@ export const scanWebsite = async (req, res) => {
     return res.status(200).json({
       message: "Scan complete",
       report: reportData,
+      name : url,
       pdf: cloudFilePath, 
+      domain : new URL(url).hostname
     });
   } catch (err) {
     console.error("Scan error:", err);

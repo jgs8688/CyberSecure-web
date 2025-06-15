@@ -18,8 +18,9 @@ const cloudinaryData = async (pdfRelativePath) => {
 
     const result = await cloudinary.uploader.upload(filePath, {
       resource_type: "raw",
-      public_id: `websure_reports/${Date.now()}`,
+      public_id: `websure_reports/WebSure_Report_${Date.now()}`,
       use_filename: true,
+      overwrite: true,
     });
 
     console.log("PDF uploaded to Cloudinary!");
@@ -27,12 +28,11 @@ const cloudinaryData = async (pdfRelativePath) => {
     const pdfUrl = result.secure_url;
 
     console.log("PDF URL:", pdfUrl);
-    console.log("Public ID:", result.public_id);
+    if (!pdfUrl) {
+      throw new Error("Failed to get PDF URL from Cloudinary");
+    }
 
-    return {
-      url: pdfUrl,
-      public_id: result.public_id,
-    };
+    return pdfUrl;
   } catch (error) {
     console.error(" Upload failed:", error);
     throw error;

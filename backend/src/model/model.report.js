@@ -7,7 +7,11 @@ const reportSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    url: {
+    name:{
+      type: String,
+      required: true,
+    },
+    pdf: {
       type: String,
       required: true,
     },
