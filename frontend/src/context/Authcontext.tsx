@@ -7,6 +7,8 @@ interface AuthContextType {
   setUser: React.Dispatch<React.SetStateAction<string | null>>; 
   scanResult: boolean;
   setScanResult: React.Dispatch<React.SetStateAction<boolean>>;
+  totalSans: number;
+  setTotalSans: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -14,17 +16,18 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 interface AuthProviderProps {
   children: ReactNode;
 }
-
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<string | null>(null); 
   const [scanResult, setScanResult] = useState<boolean>(false);
+  const [totalSans, setTotalSans] = useState<number>(0);
 
   return (
-    <AuthContext.Provider value={{ user, setUser ,scanResult, setScanResult }}>
+    <AuthContext.Provider value={{ user, setUser, scanResult, setScanResult, totalSans, setTotalSans }}>
       {children}
     </AuthContext.Provider>
   );
 };
+
 
 // Custom hook to access the auth context
 export const useAuth = (): AuthContextType => {

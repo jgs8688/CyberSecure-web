@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/logo.png";
+// import logo from "../assets/logo.png";
 import Footer from "../components/Footer";
+ import logo from "../../public/assets/Logo.svg"
 
 const testimonials = [
   {
     quote:
       "“WebSure transformed how our team manages security — fast alerts and clear reports keep us ahead of threats.”",
-    name: "Jessica T.",
+    name: "Nandan R.",
     role: "IT Security Manager",
   },
   {
@@ -32,7 +33,7 @@ const features = [
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        className="h-12 w-12 text-[#3F51B5]"
+        className="h-12 w-12 text-[#3b82f6]"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -53,7 +54,7 @@ const features = [
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        className="h-12 w-12 text-[#3F51B5]"
+        className="h-12 w-12 text-[#3b82f6]"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -74,7 +75,7 @@ const features = [
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        className="h-12 w-12 text-[#3F51B5]"
+        className="h-12 w-12 text-[#3b82f6]"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -112,12 +113,12 @@ const Home: React.FC = () => {
   return (
     <div>
       <div
-        className={`relative min-h-screen w-full bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 text-white flex flex-col items-center justify-between py-12 px-6 md:px-16 overflow-hidden transition-opacity duration-1000 ${
+        className={`relative min-h-screen w-full bg-[#0f1115] text-white flex flex-col items-center justify-between py-12 px-6 md:px-16 overflow-hidden transition-opacity duration-1000 ${
           loaded ? "opacity-100" : "opacity-0"
         }`}
       >
         {/* Background faded circles */}
-        <div className="absolute -left-20 -top-20 w-72 h-72 bg-cyan-400 rounded-full opacity-20 filter blur-3xl animate-pulse" />
+        <div className="absolute -left-20 -top-20 w-72 h-72 bg-[#2563eb] rounded-full opacity-20 filter blur-3xl animate-pulse" />
         <div className="absolute -right-20 -bottom-20 w-96 h-96 bg-indigo-600 rounded-full opacity-15 filter blur-3xl animate-pulse animation-delay-2000" />
 
         {/* Logo and headline */}
@@ -134,12 +135,12 @@ const Home: React.FC = () => {
           <h1 className="text-6xl font-extrabold tracking-tight drop-shadow-md leading-tight">
             WebSure
           </h1>
-          <p className="text-slate-50 text-2xl font-semibold max-w-3xl leading-relaxed">
+          <p className="text-[#a1a1aa] text-2xl font-semibold max-w-3xl leading-relaxed">
             The Friendlier Vulnerability & Malware Scanner — Real-time
             detection, simple reports, and complete peace of mind.
           </p>
           <button
-            className="mt-6 rounded-full  bg-[#3F51B5] px-20 py-5 font-semibold text-gray-900 text-2xl shadow-lg transition-colors  hover:bg-blue-100 cursor-pointer focus:outline-none focus:ring-4 focus:ring-cyan-400"
+            className="mt-6 rounded-full  bg-[#3b82f6] px-20 py-5 font-semibold text-gray-900 text-2xl shadow-lg transition-colors  hover:bg-[#2563eb] cursor-pointer focus:outline-none focus:ring-4 focus:ring-cyan-400"
             onClick={() => navigate("/signin")}
             aria-label="Sign in to WebSure"
           >
@@ -165,16 +166,16 @@ const Home: React.FC = () => {
 
         {/* Testimonials */}
         <section
-          className={`z-10 mt-20 w-full max-w-3xl bg-white bg-opacity-70 rounded-3xl p-10 shadow-xl backdrop-blur-md select-none relative transition-transform duration-900 ease-out delay-400 ${
+          className={`z-10 mt-20 w-full max-w-3xl bg-[#1c1f26] bg-opacity-70 rounded-3xl p-10 shadow-xl backdrop-blur-md select-none relative transition-transform duration-900 ease-out delay-400 ${
             loaded ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"
           }`}
         >
-          <blockquote className="text-center text-xl italic text-slate-500 leading-relaxed min-h-[120px]">
+          <blockquote className="text-center text-xl italic  leading-relaxed min-h-[120px]">
             {testimonials[currentTestimonial].quote}
           </blockquote>
-          <figcaption className="mt-6 text-center text-[#3F51B5] font-semibold text-lg">
+          <figcaption className="mt-6 text-center text-[#3b82f6] font-semibold text-lg">
             — {testimonials[currentTestimonial].name},{" "}
-            <span className="text-black font-normal">
+            <span className="text-white font-normal">
               {testimonials[currentTestimonial].role}
             </span>
           </figcaption>
@@ -213,10 +214,10 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
   title,
   description,
 }) => (
-  <div className="flex flex-col items-center bg-white bg-opacity-60 rounded-3xl p-8 shadow-lg backdrop-blur-md space-y-4 hover:scale-105 transform transition-transform duration-300">
-    <div>{icon}</div>
-    <h4 className="text-2xl font-bold text-center text-black">{title}</h4>
-    <p className="text-black text-center text-lg leading-relaxed">
+  <div className="flex flex-col items-center bg-[#1c1f26] bg-opacity-60 rounded-3xl p-8 shadow-lg backdrop-blur-md space-y-4 hover:scale-105 transform transition-transform duration-300">
+    <div className="text-[#3b82f6]">{icon}</div>
+    <h4 className="text-2xl font-bold text-center">{title}</h4>
+    <p className=" text-center text-lg leading-relaxed">
       {description}
     </p>
   </div>

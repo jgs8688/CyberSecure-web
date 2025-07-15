@@ -29,6 +29,7 @@ reportRouter.post("/report", async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
+
 // to get a report by userId
 reportRouter.get("/report/:userId", async (req, res) => {
   const { userId } = req.params;

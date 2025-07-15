@@ -1,7 +1,7 @@
 import banner from "../assets/signin_banner.png";
 import google from "../assets/google.png";
 import lbanner from "../assets/login_banner.png";
-import logo from "../assets/logo.png";
+import logo from "../../public/assets/Logo.svg";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import eye from "../assets/eye.png";
@@ -50,7 +50,7 @@ export default function SignIn() {
     }
   };
   return (
-    <div className="flex items-center justify-center bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 min-h-screen md:flex-row flex-col-reverse shadow-lg">
+    <div className="flex items-center justify-center bg-[#0f1115] min-h-screen md:flex-row flex-col-reverse shadow-lg">
       {/* Left Side - Banner */}
       <div className="relative w-full md:w-[500px]">
         <img

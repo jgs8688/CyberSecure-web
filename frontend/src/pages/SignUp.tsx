@@ -2,7 +2,7 @@ import { useState } from "react";
 import banner from "../assets/banner_bg.png";
 import google from "../assets/google.png";
 import lbanner from "../assets/login_banner.png";
-import logo from "../assets/logo.png";
+import logo from "../../public/assets/Logo.svg";
 import eye from "../assets/eye.png";
 import { axiosInstance } from "../utility/baseUrl";
 import { toast } from "react-toastify";
@@ -155,7 +155,7 @@ export default function SignUp() {
   // min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 px-4
 
   return (
-    <div className="flex items-center justify-center bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 min-h-screen md:flex-row flex-col-reverse shadow-lg">
+    <div className="flex items-center justify-center bg-[#0f1115] min-h-screen md:flex-row flex-col-reverse shadow-lg">
       {/* Left Side - Banner */}
       <div className="relative w-full md:w-[500px]">
         <img
@@ -172,7 +172,7 @@ export default function SignUp() {
           <img
             src={logo}
             alt="logo"
-            className="absolute top-0 p-5 pl-12 md:p-10 left-10 z-10"
+            className="absolute top-0 p-5 pl-12 md:p-10 left-10 z-10  "
           />
           <h1 className="absolute top-3 p-5 md:p-10 right-10 md:right-28 z-10 text-3xl md:text-4xl  pr-10 text-white font-bold">
             WebSure
