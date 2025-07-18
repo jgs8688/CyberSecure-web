@@ -48,7 +48,7 @@ WebSure is a powerful and user-friendly MERN stack application designed to scan 
 - **Backend:** Node.js, Express.js  
 - **Database:** MongoDB (with Mongoose)  
 - **Authentication:** JWT-based login system  
-- **Deployment:** Render
+
 
 
 
