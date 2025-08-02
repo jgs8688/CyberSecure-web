@@ -62,7 +62,7 @@ export default function SignUp() {
 
     try {
       const res = await axiosInstance.post("/user/signup", userdata);
-      console.log(res);
+      // console.log("The resoonse is: " + JSON.stringify(res));
       if (res.status === 201) {
         toast.success("Sign up successful");
         setUserData({ username: "", email: "", password: "" });

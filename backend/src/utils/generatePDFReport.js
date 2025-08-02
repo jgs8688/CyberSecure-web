@@ -3,9 +3,32 @@ import fs from 'fs';
 import path from 'path';
 
 export const generatePDFReport = async (url, scanResults) => {
+  // Validate inputs
+  if (!url || !scanResults) {
+    throw new Error('URL and scan results are required');
+  }
+
+  // Ensure scanResults has the expected structure with default values
+  const safeScanResults = {
+    malware: scanResults.malware || { found: false, links: [] },
+    phishing: scanResults.phishing || { found: false, info: 'No phishing detected' },
+    openRedirects: scanResults.openRedirects || { found: false, info: 'No open redirects found' },
+    cms: scanResults.cms || { vulnerable: false, cms: 'Unknown', info: 'No CMS vulnerabilities detected' },
+    securityHeaders: scanResults.securityHeaders || { missing: [] },
+    openPorts: scanResults.openPorts || { openPorts: [] },
+    hiddenScripts: scanResults.hiddenScripts || { samples: [] },
+    dnsRebinding: scanResults.dnsRebinding || { records: [] }
+  };
+
   const outputPath = path.join('reports', `WebSure_Report_${Date.now()}.pdf`);
 
-  fs.mkdirSync('reports', { recursive: true });
+  // Ensure reports directory exists
+  try {
+    fs.mkdirSync('reports', { recursive: true });
+  } catch (error) {
+    console.error('Error creating reports directory:', error);
+    throw new Error('Failed to create reports directory');
+  }
 
   const doc = new PDFDocument({ margin: 40 });
   const writeStream = fs.createWriteStream(outputPath);
@@ -19,7 +42,7 @@ export const generatePDFReport = async (url, scanResults) => {
     .stroke()
     .restore();
 
-  //  Header
+  // Header
   doc
     .fillColor('#003366')
     .fontSize(22)
@@ -99,61 +122,94 @@ export const generatePDFReport = async (url, scanResults) => {
 
   for (const key in sections) {
     const title = sections[key];
-    const data = scanResults[key];
+    const data = safeScanResults[key];
     const suggestion = suggestions[key];
 
     let status = 'No';
     let details = '';
 
-    if (key === 'cms') {
-      status = data.vulnerable ? 'Yes' : 'No';
-      details = `CMS: ${data.cms || 'None'}, ${data.info}`;
-    } else if (key === 'securityHeaders') {
-      status = data.missing.length ? 'Yes' : 'No';
-      details = data.missing.join(', ') || 'None missing';
-    } else if (key === 'openPorts') {
-      status = data.openPorts.length ? 'Yes' : 'No';
-      details = data.openPorts.join(', ') || 'None';
-    } else if (key === 'hiddenScripts') {
-      status = data.samples.length ? 'Yes' : 'No';
-      details = data.samples.join(', ') || 'None';
-    } else if (key === 'dnsRebinding') {
-      status = data.records.length ? 'Yes' : 'No';
-      details = data.records.join(', ') || 'None';
-    } else if (key === 'malware') {
-      status = data.found ? 'Yes' : 'No';
-      details = data.links.length ? data.links.join(', ') : 'None';
-    } else {
-      status = data.found ? 'Yes' : 'No';
-      details = data.info || '';
+    try {
+      if (key === 'cms') {
+        status = data?.vulnerable ? 'Yes' : 'No';
+        details = `CMS: ${data?.cms || 'None'}, ${data?.info || 'No information available'}`;
+      } else if (key === 'securityHeaders') {
+        const missingHeaders = Array.isArray(data?.missing) ? data.missing : [];
+        status = missingHeaders.length > 0 ? 'Yes' : 'No';
+        details = missingHeaders.length > 0 ? missingHeaders.join(', ') : 'None missing';
+      } else if (key === 'openPorts') {
+        const openPorts = Array.isArray(data?.openPorts) ? data.openPorts : [];
+        status = openPorts.length > 0 ? 'Yes' : 'No';
+        details = openPorts.length > 0 ? openPorts.join(', ') : 'None';
+      } else if (key === 'hiddenScripts') {
+        const samples = Array.isArray(data?.samples) ? data.samples : [];
+        status = samples.length > 0 ? 'Yes' : 'No';
+        details = samples.length > 0 ? samples.slice(0, 3).join(', ') + (samples.length > 3 ? '...' : '') : 'None';
+      } else if (key === 'dnsRebinding') {
+        const records = Array.isArray(data?.records) ? data.records : [];
+        status = records.length > 0 ? 'Yes' : 'No';
+        details = records.length > 0 ? records.join(', ') : 'None';
+      } else if (key === 'malware') {
+        status = data?.found ? 'Yes' : 'No';
+        const links = Array.isArray(data?.links) ? data.links : [];
+        details = links.length > 0 ? links.slice(0, 2).join(', ') + (links.length > 2 ? '...' : '') : 'None';
+      } else {
+        status = data?.found ? 'Yes' : 'No';
+        details = data?.info || 'No additional information';
+      }
+    } catch (error) {
+      console.error(`Error processing ${key}:`, error);
+      status = 'Error';
+      details = 'Error processing data';
     }
 
-    const detailsHeight = doc.heightOfString(details, { width: colWidths.details });
-    const suggestionHeight = doc.heightOfString(suggestion, { width: colWidths.suggestion });
-    const rowHeight = Math.max(detailsHeight, suggestionHeight, 14) + rowHeightPadding;
+    // Ensure details is a string and not too long
+    if (typeof details !== 'string') {
+      details = String(details || 'No data available');
+    }
+    
+    // Truncate very long details
+    if (details.length > 100) {
+      details = details.substring(0, 97) + '...';
+    }
 
-    // Alternate row background
-    if (isAlternate) {
+    try {
+      const detailsHeight = doc.heightOfString(details, { width: colWidths.details });
+      const suggestionHeight = doc.heightOfString(suggestion, { width: colWidths.suggestion });
+      const rowHeight = Math.max(detailsHeight, suggestionHeight, 14) + rowHeightPadding;
+
+      // Check if we need a new page
+      if (y + rowHeight > doc.page.height - 80) {
+        doc.addPage();
+        y = 40;
+      }
+
+      // Alternate row background
+      if (isAlternate) {
+        doc
+          .rect(40, y - 2, 510, rowHeight + 2)
+          .fill('#f0f4f8')
+          .fillColor('black');
+      }
+      isAlternate = !isAlternate;
+
+      // Write data
       doc
-        .rect(40, y - 2, 510, rowHeight + 2)
-        .fill('#f0f4f8')
-        .fillColor('black');
+        .fontSize(9)
+        .fillColor('black')
+        .font('Helvetica')
+        .text(title, colPositions.vulnerability, y, { width: colWidths.vulnerability })
+        .fillColor(status === 'Yes' ? '#d32f2f' : status === 'Error' ? '#ff9800' : '#388e3c')
+        .text(status, colPositions.status, y, { width: colWidths.status })
+        .fillColor('black')
+        .text(details, colPositions.details, y, { width: colWidths.details })
+        .text(suggestion, colPositions.suggestion, y, { width: colWidths.suggestion });
+
+      y += rowHeight;
+    } catch (error) {
+      console.error(`Error rendering row for ${key}:`, error);
+      // Skip this row and continue
+      continue;
     }
-    isAlternate = !isAlternate;
-
-    // Write data
-    doc
-      .fontSize(9)
-      .fillColor('black')
-      .font('Helvetica')
-      .text(title, colPositions.vulnerability, y, { width: colWidths.vulnerability })
-      .fillColor(status === 'Yes' ? '#d32f2f' : '#388e3c')
-      .text(status, colPositions.status, y, { width: colWidths.status })
-      .fillColor('black')
-      .text(details, colPositions.details, y, { width: colWidths.details })
-      .text(suggestion, colPositions.suggestion, y, { width: colWidths.suggestion });
-
-    y += rowHeight;
   }
 
   // Footer
@@ -169,12 +225,15 @@ export const generatePDFReport = async (url, scanResults) => {
     });
 
   doc.end();
-  
-
-  
 
   return new Promise((resolve, reject) => {
-    writeStream.on('finish', () => resolve(outputPath));
-    writeStream.on('error', reject);
+    writeStream.on('finish', () => {
+      console.log(`PDF report generated successfully: ${outputPath}`);
+      resolve(outputPath);
+    });
+    writeStream.on('error', (error) => {
+      console.error('Error writing PDF file:', error);
+      reject(error);
+    });
   });
 };

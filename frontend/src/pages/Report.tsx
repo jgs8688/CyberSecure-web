@@ -41,7 +41,7 @@ const Report: React.FC = () => {
     };
 
     fetchReports();
-  }, []);
+  }, [user]);
 
   return (
     <div className="min-h-screen bg-[#0f1115] text-white p-6 border-10 border-gray-700">
