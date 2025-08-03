@@ -7,19 +7,19 @@ import Footer from "../components/Footer";
 const testimonials = [
   {
     quote:
-      "“WebSure transformed how our team manages security — fast alerts and clear reports keep us ahead of threats.”",
+      "CyberCage-web transformed how our team manages security — fast alerts and clear reports keep us ahead of threats.”",
     name: "Nandan R.",
     role: "IT Security Manager",
   },
   {
     quote:
-      "“The intuitive interface and powerful scans make WebSure essential for our cybersecurity strategy.”",
+      "“The intuitive interface and powerful scans make CyberCage-web essential for our cybersecurity strategy.”",
     name: "Daniel K.",
     role: "Chief Technology Officer",
   },
   {
     quote:
-      "“Reduced vulnerabilities drastically since adopting WebSure. Highly recommend for any serious organization.”",
+      "“Reduced vulnerabilities drastically since adopting CyberCage-web. Highly recommend for any serious organization.”",
     name: "Samantha R.",
     role: "Security Analyst",
   },
@@ -129,11 +129,11 @@ const Home: React.FC = () => {
         >
           <img
             src={logo}
-            alt="WebSure Logo"
+            alt="CyberCage-web Logo"
             className="w-36 h-36 object-contain drop-shadow-xl"
           />
           <h1 className="text-6xl font-extrabold tracking-tight drop-shadow-md leading-tight">
-            WebSure
+            CyberCage-web
           </h1>
           <p className="text-[#a1a1aa] text-2xl font-semibold max-w-3xl leading-relaxed">
             The Friendlier Vulnerability & Malware Scanner — Real-time
@@ -142,7 +142,7 @@ const Home: React.FC = () => {
           <button
             className="mt-6 rounded-full  bg-[#3b82f6] px-20 py-5 font-semibold text-gray-900 text-2xl shadow-lg transition-colors  hover:bg-[#2563eb] cursor-pointer focus:outline-none focus:ring-4 focus:ring-cyan-400"
             onClick={() => navigate("/signin")}
-            aria-label="Sign in to WebSure"
+            aria-label="Sign in to CyberCage-web"
           >
             Get Started - Sign In
           </button>

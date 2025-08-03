@@ -1,6 +1,6 @@
-#  WebSure – Web Vulnerability & Malware Scanner
+#  CyberCage-web – Web Vulnerability & Malware Scanner
 
-WebSure is a powerful and user-friendly MERN stack application designed to scan websites for vulnerabilities, malware, phishing links, DNS issues, and more. It aims to provide free, open-source web security analysis in a clean and intuitive dashboard.  
+CyberCage-web is a powerful and user-friendly MERN stack application designed to scan websites for vulnerabilities, malware, phishing links, DNS issues, and more. It aims to provide free, open-source web security analysis in a clean and intuitive dashboard.  
 
 ## 🚀 Features
 
@@ -55,10 +55,10 @@ WebSure is a powerful and user-friendly MERN stack application designed to scan 
 
 ## 🛡️ License
 ![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)
-![Last Commit](https://img.shields.io/github/last-commit/NandanR06/WebSure)
-![Issues](https://img.shields.io/github/issues/NandanR06/WebSure)
-![Stars](https://img.shields.io/github/stars/NandanR06/WebSure?style=social)
-![Forks](https://img.shields.io/github/forks/NandanR06/WebSure?style=social)
+![Last Commit](https://img.shields.io/github/last-commit/NandanR06/CyberCage-web)
+![Issues](https://img.shields.io/github/issues/NandanR06/CyberCage-web)
+![Stars](https://img.shields.io/github/stars/NandanR06/CyberCage-web?style=social)
+![Forks](https://img.shields.io/github/forks/NandanR06/CyberCage-web?style=social)
 
 
 This project is licensed under the **MIT License**.  
@@ -73,8 +73,8 @@ You are free to use, modify, and distribute this software with proper attributio
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/WebSure.git
-cd WebSure
+git clone https://github.com/yourusername/CyberCage-web.git
+cd CyberCage-web
 
 cd backend
 npm install

@@ -175,7 +175,7 @@ export default function SignUp() {
             className="absolute top-0 p-5 pl-12 md:p-10 left-10 z-10  "
           />
           <h1 className="absolute top-3 p-5 md:p-10 right-10 md:right-28 z-10 text-3xl md:text-4xl  pr-10 text-white font-bold">
-            WebSure
+            CyberCage-web
           </h1>
         </div>
         <div className="">
@@ -192,7 +192,7 @@ export default function SignUp() {
       {/* Right Side - Form */}
       <div className="flex flex-col pt-10 md:pt-20 justify-center w-full md:w-[500px] bg-white shadow-lg px-6 md:px-10 md:rounded-br-2xl">
         <h1 className="font-bold text-center  md:text-2xl text-3xl">
-          Join & Connect with WebSure
+          Join & Connect with CyberCage-web
         </h1>
 
         <button

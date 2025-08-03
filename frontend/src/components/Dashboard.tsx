@@ -197,7 +197,7 @@ const Dashboard: React.FC = () => {
         <div className="flex items-center justify-between p-4">
           <div className="flex items-center gap-2">
             <img src={logo} alt="logo" className="w-15 h-15" />
-            <h1 className="text-xl font-bold">WebSure</h1>
+            <h1 className="text-xl font-bold">CyberCage-web</h1>
           </div>
           <X
             className="w-6 h-6 cursor-pointer md:hidden"

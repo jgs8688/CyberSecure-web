@@ -70,7 +70,7 @@ export default function SignIn() {
             className="absolute top-0 p-5 pl-12 md:p-10 left-10 z-10"
           />
           <h1 className="absolute top-3 p-5 md:p-10 right-10 md:right-28 z-10 text-3xl md:text-4xl  pr-10 text-white font-bold">
-            WebSure
+            CyberCage-web
           </h1>
         </div>
         <div className="">
@@ -87,7 +87,7 @@ export default function SignIn() {
       {/* Right Side - Form */}
       <div className="flex flex-col py-10 md:py-30 pt-10 md:pt-20 justify-center w-full md:w-[500px] bg-white shadow-lg px-6 md:px-10 md:rounded-br-2xl">
         <h1 className="font-bold text-center  md:text-2xl text-3xl">
-          Welcome back to the WebSure
+          Welcome back to the CyberCage-web
         </h1>
 
         <button

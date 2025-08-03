@@ -3,12 +3,15 @@ import { axiosInstance } from "../utility/baseUrl";
 import ReportDetails from "./ReportDetails";
 import { useAuth } from "../context/Authcontext";
 import logo from "../../public/assets/Logo.svg";
+// import { useNavigate } from 'react-router-dom';
 
 interface resultData {
   resultValue: any;
 }
 
 const ScanPage: React.FC<resultData> = ({ resultValue }) => {
+
+
   console.log("Scan Result Data: ", resultValue);
   const { user: id } = useAuth();
   const [url, setUrl] = useState("");
@@ -32,7 +35,7 @@ const ScanPage: React.FC<resultData> = ({ resultValue }) => {
     <div className=" bg-[#0f1116] w-screen flex flex-col h-full bor border-10 border-gray-700">
       <div className="flex items-center  p-4">
         <img src={logo} alt="" className="w-15" />
-        <h1 className="text-white font-bold text-2xl ">WebSure</h1>
+        <h1 className="text-white font-bold text-2xl ">CyberCage-web</h1>
       </div>
       <div className="flex flex-col items-center  gap-2">
         <h1 className="text-white font-bold text-5xl">Scan Results</h1>
