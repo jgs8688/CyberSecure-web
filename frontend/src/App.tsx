@@ -77,7 +77,7 @@ export default function App() {
         />
         <Route 
           path="/scan" 
-          element={user ? <ScanForm resultValue={scanResult} /> : <SignIn />} 
+          element={user ? <Dashboard /> : <SignIn />} // Redirect scan to dashboard
         />
         <Route 
           path="/reports" 
@@ -88,10 +88,10 @@ export default function App() {
           element={user ? <UserProfile /> : <SignIn />} 
         />
 
-        {/* Legacy routes for backward compatibility */}
+        {/* Legacy routes for backward compatibility - redirect to dashboard */}
         <Route 
           path="/ScanForm" 
-          element={user ? <ScanForm resultValue={scanResult} /> : <SignIn />} 
+          element={user ? <Dashboard /> : <SignIn />} 
         />
         <Route 
           path="/report" 

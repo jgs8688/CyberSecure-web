@@ -40,7 +40,7 @@ const Dashboard: React.FC = () => {
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
-  const [value, setValue] = useState(true);
+  const [showScanForm, setShowScanForm] = useState(false); // Better state management
   const [reports, setReports] = useState<ReportItem[]>([]);
 
   const navigate = useNavigate();
@@ -128,16 +128,28 @@ const Dashboard: React.FC = () => {
       const res = await axiosInstance.post("/url/scan", { url }, {
         withCredentials: true,
       });
+      
       setResult(res.data);
-      setValue(false);
+      setShowScanForm(true); // Show scan form instead of changing value
       toast.success("Scan completed successfully!");
+      
+      // Clear URL input
+      setUrl("");
+      
     } catch (err) {
       console.error("Scan error:", err);
       setResult({ error: "Scan failed" });
+      setShowScanForm(true); // Still show form with error
       toast.error("Scan failed. Please try again.");
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleBackToDashboard = () => {
+    setShowScanForm(false);
+    setResult(null);
+    setUrl("");
   };
 
   const sidebarItems = [
@@ -145,8 +157,7 @@ const Dashboard: React.FC = () => {
       label: "Dashboard",
       icon: <LayoutDashboard className="h-6 w-6" />,
       onClick: () => {
-        setValue(true);
-        setResult(null);
+        handleBackToDashboard();
       },
     },
     {
@@ -188,7 +199,7 @@ const Dashboard: React.FC = () => {
     );
   }
 
-  if (loading && !value) {
+  if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-[#0f1115]">
         <LoaderCircle className="animate-spin w-12 h-12 text-blue-500" />
@@ -196,10 +207,20 @@ const Dashboard: React.FC = () => {
     );
   }
 
-  if (!value && result) {
+  // Show scan form if we have results
+  if (showScanForm && result) {
     return (
       <div className="bg-[#0f1115] text-white">
         <ScanForm resultValue={result} />
+        {/* Add a back button that calls our handler */}
+        <div className="fixed top-20 left-4 z-50">
+          <button
+            onClick={handleBackToDashboard}
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors shadow-lg"
+          >
+            ← Back to Dashboard
+          </button>
+        </div>
       </div>
     );
   }

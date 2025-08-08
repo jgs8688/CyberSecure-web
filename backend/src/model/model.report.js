@@ -1,4 +1,4 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 
 const reportSchema = new mongoose.Schema(
   {
@@ -7,7 +7,7 @@ const reportSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    name:{
+    name: {
       type: String,
       required: true,
     },
@@ -19,12 +19,12 @@ const reportSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-     
   },
   {
     timestamps: true,
   }
 );
 
-const ReportData  = new mongoose.model("ReportData", reportSchema);
+// Fixed: Removed 'new' keyword - this was the main issue
+const ReportData = mongoose.model("ReportData", reportSchema);
 export default ReportData;
