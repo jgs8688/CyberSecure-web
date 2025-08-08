@@ -34,7 +34,7 @@ const Footer: React.FC = () => {
   return (
     <footer className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-gray-300 backdrop-blur border-t border-gray-700 w-full py-10 mt-10">
       <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-8">
-        <p className="text-sm text-center md:text-left">&copy; {new Date().getFullYear()} <span className="text-white font-semibold">CyberCage-web</span>. All rights reserved.</p>
+        <p className="text-sm text-center md:text-left">&copy; {new Date().getFullYear()} <span className="text-white font-semibold">CyberSecure-web</span>. All rights reserved.</p>
 
         <nav className="flex flex-wrap justify-center gap-6 text-sm">
           <a href="#home" className="hover:text-cyan-400 transition duration-300">Home</a>

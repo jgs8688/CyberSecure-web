@@ -12,8 +12,8 @@ import {
   Menu,
   User,
   LoaderCircle,
+  LogOut,
 } from "lucide-react";
-import { LogOut } from "lucide-react";
 
 import logo from "../../public/assets/Logo.svg";
 import { toast } from "react-toastify";
@@ -22,15 +22,20 @@ interface UserData {
   username: string;
   email: string;
 }
+
 interface ReportItem {
+  _id: string;
+  userId: string;
   name: string;
   domain: string;
   pdf: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 const Dashboard: React.FC = () => {
   const [userData, setUserData] = useState<UserData>();
-  const { user: id, setUser, totalSans } = useAuth();
+  const { user: id, setUser, totalSans, setTotalSans } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
@@ -41,43 +46,50 @@ const Dashboard: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const userDatas = async () => {
-      const res = await axiosInstance.get(`/user/getUser/${id}`, {
-        withCredentials: true,
-      });
-      // toast.error("this is it" + id);  //688afcafefb8556aefe1893e //ok
+    if (!id) {
+      navigate("/signin");
+      return;
+    }
 
-      if (res.status === 200) {
-        setUserData((pre) => ({ ...pre, ...res.data.data }));
+    const userDatas = async () => {
+      try {
+        const res = await axiosInstance.get(`/user/getUser/${id}`, {
+          withCredentials: true,
+        });
+
+        if (res.status === 200) {
+          setUserData(res.data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        toast.error("Failed to fetch user data");
       }
     };
     userDatas();
-  }, []);
+  }, [id, navigate]);
 
   useEffect(() => {
+    if (!id) return;
+
     const fetchReports = async () => {
       try {
-        const response = await axiosInstance.get(`url/report/${id}`, {
+        const response = await axiosInstance.get(`/url/report/${id}`, {
           withCredentials: true,
         });
 
         if (response.status === 200) {
-          setReports(response.data.userReports);
-
-          console.log("total scans : ", totalSans);
+          setReports(response.data.userReports || []);
+          setTotalSans(response.data.userReports?.length || 0);
         } else {
           toast.error("Failed to fetch reports.");
         }
       } catch (error) {
-        // toast.error("this is it" + id); 
-        // toast.error("Something went wrong while fetching reports.");
-        console.error(error);
+        console.error("Error fetching reports:", error);
       }
     };
 
-    // fetchReports();
-    if (id) fetchReports(); 
-  },[]);
+    fetchReports();
+  }, [id, setTotalSans]);
 
   const handleSignOut = async () => {
     try {
@@ -87,9 +99,11 @@ const Dashboard: React.FC = () => {
       if (res.status === 200) {
         setUser(null);
         navigate("/");
+        toast.success("Signed out successfully");
       }
     } catch (error) {
       console.error("Sign out error:", error);
+      toast.error("Failed to sign out");
     }
   };
 
@@ -97,22 +111,30 @@ const Dashboard: React.FC = () => {
     e.preventDefault();
     setLoading(true);
     setResult(null);
-    if (!url) {
+    
+    if (!url.trim()) {
       toast.error("Please enter a URL to scan.");
       setLoading(false);
       return;
     }
+    
     if (!url.startsWith("http://") && !url.startsWith("https://")) {
       toast.error("Please enter a valid URL starting with http:// or https://");
       setLoading(false);
       return;
     }
+    
     try {
-      const res = await axiosInstance.post("/url/scan", { url });
+      const res = await axiosInstance.post("/url/scan", { url }, {
+        withCredentials: true,
+      });
       setResult(res.data);
       setValue(false);
+      toast.success("Scan completed successfully!");
     } catch (err) {
+      console.error("Scan error:", err);
       setResult({ error: "Scan failed" });
+      toast.error("Scan failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -122,27 +144,29 @@ const Dashboard: React.FC = () => {
     {
       label: "Dashboard",
       icon: <LayoutDashboard className="h-6 w-6" />,
-      onClick: () => navigate("/dashboard"),
+      onClick: () => {
+        setValue(true);
+        setResult(null);
+      },
     },
     {
       label: "Scan",
       icon: <Globe className="h-6 w-6" />,
-      onClick: () => navigate("/ScanForm"),
+      onClick: () => navigate("/scan"),
     },
     {
       label: "Reports",
       icon: <Bug className="h-6 w-6" />,
-      onClick: () => navigate("/report"),
+      onClick: () => navigate("/reports"),
     },
     {
-      label: "Settings",
-      icon: <ShieldCheck className="h-6 w-6" />,
-      onClick: () => navigate("/settings"),
+      label: "Profile",
+      icon: <User className="h-6 w-6" />,
+      onClick: () => navigate("/profile"),
     },
     {
       label: "Sign Out",
-      icon: <LogOut className="h-5 w-5 " />,
-
+      icon: <LogOut className="h-5 w-5" />,
       onClick: handleSignOut,
     },
   ];
@@ -164,9 +188,9 @@ const Dashboard: React.FC = () => {
     );
   }
 
-  if (loading) {
+  if (loading && !value) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-[#0f1115]">
         <LoaderCircle className="animate-spin w-12 h-12 text-blue-500" />
       </div>
     );
@@ -190,14 +214,14 @@ const Dashboard: React.FC = () => {
       </div>
 
       <aside
-        className={`bg-[#1c1f26] fixed top-0 px-2 left-0 h-screen z-50 w-[250px]  md:border-r border-10 border-gray-700 transition-transform duration-300 ease-in-out ${
+        className={`bg-[#1c1f26] fixed top-0 px-2 left-0 h-screen z-50 w-[250px] border-r border-gray-700 transition-transform duration-300 ease-in-out ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 md:relative md:block`}
       >
         <div className="flex items-center justify-between p-4">
           <div className="flex items-center gap-2">
-            <img src={logo} alt="logo" className="w-15 h-15" />
-            <h1 className="text-xl font-bold">CyberCage-web</h1>
+            <img src={logo} alt="logo" className="w-8 h-8" />
+            <h1 className="text-xl font-bold">CyberSecure-web</h1>
           </div>
           <X
             className="w-6 h-6 cursor-pointer md:hidden"
@@ -208,7 +232,7 @@ const Dashboard: React.FC = () => {
           {sidebarItems.map((item) => (
             <li
               key={item.label}
-              className="flex items-center gap-2 p-4 rounded-xl hover:bg-gray-800 cursor-pointer"
+              className="flex items-center gap-2 p-4 rounded-xl hover:bg-gray-800 cursor-pointer transition-colors"
               onClick={() => {
                 item.onClick();
                 setSidebarOpen(false);
@@ -221,59 +245,100 @@ const Dashboard: React.FC = () => {
         </ul>
       </aside>
 
-      <main className="flex-1 p-4  w-full overflow-x-hidden   md:border-l border-10 border-gray-700 ">
+      <main className="flex-1 p-4 w-full overflow-x-hidden">
         <div className="w-full max-w-[75rem] mx-auto">
-          <div className="flex justify-end mb-4">
+          <div className="flex justify-between items-center mb-4">
+            <h1 className="text-4xl font-bold">Dashboard</h1>
             <User
-              className="w-6 h-6 text-white cursor-pointer"
-              onClick={() => navigate("/userProfile")}
+              className="w-6 h-6 text-white cursor-pointer hover:text-blue-400 transition-colors"
+              onClick={() => navigate("/profile")}
             />
           </div>
-
-          <h1 className="text-4xl font-bold mb-4">Dashboard</h1>
 
           <div className="bg-[#1c1f26] rounded-xl p-4 shadow-lg w-full mb-6">
             <h2 className="md:text-3xl text-xl font-semibold pb-2">
               Website Scan Overview
             </h2>
-            <hr className="text-gray-500" />
-            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 p-4">
-              <OverviewItem title="Total Scans" value={reports?.length} bold />
+            <hr className="text-gray-500 mb-4" />
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <OverviewItem title="Total Scans" value={reports?.length || 0} bold />
               <OverviewItem title="Phishing Pages" value={0} />
               <OverviewItem title="Malware" value={0} />
-              <OverviewItem title="Completed Scans" value={0} />
+              <OverviewItem title="Completed Scans" value={reports?.length || 0} />
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-[#1c1f26] p-6 rounded-lg shadow-md">
               <h2 className="text-xl font-semibold mb-4">Quick Scan</h2>
-              <input
-                type="text"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                placeholder="Enter Website URL"
-                className="w-full p-2 rounded bg-gray-800 text-white border border-gray-600 mb-4"
-                required
-              />
-              <button
-                onClick={handleScan}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded w-full"
-              >
-                Scan Now
-              </button>
+              <form onSubmit={handleScan}>
+                <input
+                  type="url"
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                  placeholder="Enter Website URL (e.g., https://example.com)"
+                  className="w-full p-3 rounded bg-gray-800 text-white border border-gray-600 mb-4 focus:border-blue-500 focus:outline-none"
+                  required
+                />
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 text-white px-4 py-2 rounded w-full transition-colors"
+                >
+                  {loading ? "Scanning..." : "Scan Now"}
+                </button>
+              </form>
             </div>
 
             <div className="bg-[#1c1f26] p-6 rounded-lg shadow-md">
               <h2 className="text-xl font-semibold mb-4">Security Tips</h2>
               <ul className="list-disc pl-6 space-y-2 text-gray-300">
                 <li>Keep your software updated</li>
-                <li>Use strong passwords</li>
+                <li>Use strong, unique passwords</li>
                 <li>Enable two-factor authentication</li>
                 <li>Regularly back up your data</li>
+                <li>Be cautious with email attachments</li>
               </ul>
             </div>
           </div>
+
+          {/* Recent Reports */}
+          {reports.length > 0 && (
+            <div className="bg-[#1c1f26] rounded-xl p-6 shadow-lg w-full mt-6">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-semibold">Recent Scans</h2>
+                <button
+                  onClick={() => navigate("/reports")}
+                  className="text-blue-400 hover:text-blue-300 text-sm"
+                >
+                  View All
+                </button>
+              </div>
+              <div className="space-y-3">
+                {reports.slice(0, 3).map((report) => (
+                  <div
+                    key={report._id}
+                    className="flex justify-between items-center p-3 bg-gray-800 rounded-lg"
+                  >
+                    <div>
+                      <p className="text-white font-medium truncate">{report.domain}</p>
+                      <p className="text-gray-400 text-sm">
+                        {new Date(report.createdAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <a
+                      href={report.pdf}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-400 hover:text-blue-300 text-sm"
+                    >
+                      View Report
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </main>
     </div>

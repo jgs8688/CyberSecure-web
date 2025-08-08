@@ -34,7 +34,7 @@ async function sendOTPEmail(toEmail, otp) {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: toEmail,
-    subject: "Verify Your Email - CyberCage-web",
+    subject: "Verify Your Email - CyberSecure-web",
     html,
   };
 

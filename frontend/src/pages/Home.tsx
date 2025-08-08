@@ -1,25 +1,25 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-// import logo from "../assets/logo.png";
 import Footer from "../components/Footer";
- import logo from "../../public/assets/Logo.svg"
+import { useAuth } from "../context/Authcontext";
+import logo from "../../public/assets/Logo.svg";
 
 const testimonials = [
   {
     quote:
-      "CyberCage-web transformed how our team manages security — fast alerts and clear reports keep us ahead of threats.”",
+      "CyberSecure-web transformed how our team manages security — fast alerts and clear reports keep us ahead of threats.",
     name: "Nandan R.",
     role: "IT Security Manager",
   },
   {
     quote:
-      "“The intuitive interface and powerful scans make CyberCage-web essential for our cybersecurity strategy.”",
+      "The intuitive interface and powerful scans make CyberSecure-web essential for our cybersecurity strategy.",
     name: "Daniel K.",
     role: "Chief Technology Officer",
   },
   {
     quote:
-      "“Reduced vulnerabilities drastically since adopting CyberCage-web. Highly recommend for any serious organization.”",
+      "Reduced vulnerabilities drastically since adopting CyberSecure-web. Highly recommend for any serious organization.",
     name: "Samantha R.",
     role: "Security Analyst",
   },
@@ -93,6 +93,7 @@ const features = [
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [loaded, setLoaded] = useState(false);
@@ -110,6 +111,18 @@ const Home: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const handleGetStarted = () => {
+    if (isAuthenticated) {
+      navigate("/dashboard");
+    } else {
+      navigate("/signin");
+    }
+  };
+
+  const handleNavigation = (path: string) => {
+    navigate(path);
+  };
+
   return (
     <div>
       <div
@@ -117,6 +130,52 @@ const Home: React.FC = () => {
           loaded ? "opacity-100" : "opacity-0"
         }`}
       >
+        {/* Navigation Bar */}
+        <nav className="absolute top-0 left-0 right-0 z-20 flex justify-between items-center p-6 md:px-16">
+          <div className="flex items-center gap-2">
+            <img
+              src={logo}
+              alt="CyberSecure-web Logo"
+              className="w-8 h-8 object-contain"
+            />
+            <span className="text-xl font-bold">CyberSecure-web</span>
+          </div>
+          
+          <div className="flex items-center gap-4">
+            {isAuthenticated ? (
+              <>
+                <button
+                  onClick={() => handleNavigation("/dashboard")}
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
+                  Dashboard
+                </button>
+                <button
+                  onClick={() => handleNavigation("/profile")}
+                  className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition-colors"
+                >
+                  Profile
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => handleNavigation("/signin")}
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
+                  Sign In
+                </button>
+                <button
+                  onClick={() => handleNavigation("/signup")}
+                  className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition-colors"
+                >
+                  Sign Up
+                </button>
+              </>
+            )}
+          </div>
+        </nav>
+
         {/* Background faded circles */}
         <div className="absolute -left-20 -top-20 w-72 h-72 bg-[#2563eb] rounded-full opacity-20 filter blur-3xl animate-pulse" />
         <div className="absolute -right-20 -bottom-20 w-96 h-96 bg-indigo-600 rounded-full opacity-15 filter blur-3xl animate-pulse animation-delay-2000" />
@@ -125,26 +184,26 @@ const Home: React.FC = () => {
         <header
           className={`z-10 flex flex-col items-center space-y-6 max-w-4xl text-center transition-transform duration-900 ease-out ${
             loaded ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"
-          }`}
+          } mt-20`}
         >
           <img
             src={logo}
-            alt="CyberCage-web Logo"
+            alt="CyberSecure-web Logo"
             className="w-36 h-36 object-contain drop-shadow-xl"
           />
           <h1 className="text-6xl font-extrabold tracking-tight drop-shadow-md leading-tight">
-            CyberCage-web
+            CyberSecure-web
           </h1>
           <p className="text-[#a1a1aa] text-2xl font-semibold max-w-3xl leading-relaxed">
             The Friendlier Vulnerability & Malware Scanner — Real-time
             detection, simple reports, and complete peace of mind.
           </p>
           <button
-            className="mt-6 rounded-full  bg-[#3b82f6] px-20 py-5 font-semibold text-gray-900 text-2xl shadow-lg transition-colors  hover:bg-[#2563eb] cursor-pointer focus:outline-none focus:ring-4 focus:ring-cyan-400"
-            onClick={() => navigate("/signin")}
-            aria-label="Sign in to CyberCage-web"
+            className="mt-6 rounded-full bg-[#3b82f6] px-20 py-5 font-semibold text-white text-2xl shadow-lg transition-colors hover:bg-[#2563eb] cursor-pointer focus:outline-none focus:ring-4 focus:ring-cyan-400"
+            onClick={handleGetStarted}
+            aria-label={isAuthenticated ? "Go to Dashboard" : "Sign in to CyberSecure-web"}
           >
-            Get Started - Sign In
+            {isAuthenticated ? "Go to Dashboard" : "Get Started - Sign In"}
           </button>
         </header>
 
@@ -170,7 +229,7 @@ const Home: React.FC = () => {
             loaded ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"
           }`}
         >
-          <blockquote className="text-center text-xl italic  leading-relaxed min-h-[120px]">
+          <blockquote className="text-center text-xl italic leading-relaxed min-h-[120px]">
             {testimonials[currentTestimonial].quote}
           </blockquote>
           <figcaption className="mt-6 text-center text-[#3b82f6] font-semibold text-lg">
@@ -196,7 +255,34 @@ const Home: React.FC = () => {
           </div>
         </section>
 
-        
+        {/* Call to Action */}
+        <section className="z-10 mt-16 text-center">
+          <h2 className="text-3xl font-bold mb-4">
+            Ready to Secure Your Digital Assets?
+          </h2>
+          <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
+            Join thousands of developers and security professionals who trust CyberSecure-web
+            to keep their websites safe from threats.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            {!isAuthenticated && (
+              <>
+                <button
+                  onClick={() => handleNavigation("/signup")}
+                  className="bg-blue-600 hover:bg-blue-700 px-8 py-3 rounded-lg font-semibold transition-colors"
+                >
+                  Start Free Trial
+                </button>
+                <button
+                  onClick={() => handleNavigation("/signin")}
+                  className="border border-blue-600 text-blue-400 hover:bg-blue-600 hover:text-white px-8 py-3 rounded-lg font-semibold transition-colors"
+                >
+                  Sign In
+                </button>
+              </>
+            )}
+          </div>
+        </section>
       </div>
       <Footer />
     </div>
@@ -217,9 +303,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
   <div className="flex flex-col items-center bg-[#1c1f26] bg-opacity-60 rounded-3xl p-8 shadow-lg backdrop-blur-md space-y-4 hover:scale-105 transform transition-transform duration-300">
     <div className="text-[#3b82f6]">{icon}</div>
     <h4 className="text-2xl font-bold text-center">{title}</h4>
-    <p className=" text-center text-lg leading-relaxed">
-      {description}
-    </p>
+    <p className="text-center text-lg leading-relaxed">{description}</p>
   </div>
 );
 

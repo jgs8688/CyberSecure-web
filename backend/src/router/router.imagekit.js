@@ -22,8 +22,8 @@ const imagekitData = async (pdfRelativePath) => {
 
     const result = await imagekit.upload({
       file: fileBuffer, // can be buffer, file stream, or base64
-      fileName: `CyberCage-web_Report_${timestamp}.pdf`,
-      folder: "/CyberCage-web_reports",
+      fileName: `CyberSecure-web_Report_${timestamp}.pdf`,
+      folder: "/CyberSecure-web_reports",
       useUniqueFileName: false, // use your own filename format
     });
 
